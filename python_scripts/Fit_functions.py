@@ -14,16 +14,16 @@ class Storage_of_fit_choice:
     # argumentStorageDict = dict() #stores all elements in a dict, also has a tuple that says where to put the variable elements upon fitting
     # listOfFitPositions = [] #stores the path to each arg used for fitting
 
-    def __init__(self,startfitvaldict:dict):
+    def __init__(self,startfitvaldict:dict, weightfactor= 1):
         self.argumentStorageDict = dict() #contains the kwargs for the function call
         self.listOfFitPositions = []   #contains the positions where the fit params are being placed, in the format [ ['kvalname', listPosition:int], ...]
-
+        self.weightFactor = weightfactor #this factor modifies the 
         for x in startfitvaldict:
             if isinstance(startfitvaldict[x][0], list):
                 self.argumentStorageDict[x] = startfitvaldict[x][0]
             else:
                 self.argumentStorageDict[x] = [startfitvaldict[x][0]]
-
+       
         for x in  self.argumentStorageDict:
             if not isinstance(startfitvaldict[x][1], list):
                 if startfitvaldict[x][1] == True:
@@ -38,7 +38,6 @@ class Storage_of_fit_choice:
         # print('nrFitargs: ' + str(self.nrFitArgs))  
         # print('listofposis: ' )               
         # print(self.listOfFitPositions)
-
     def __modify_parameter_dict(self, *args):
         '''uses the arg list to change all parameters for the fit function'''
         for (x,y) in zip(self.listOfFitPositions, args):
@@ -88,7 +87,7 @@ class Storage_of_fit_choice:
             raise ValueError('wrong number of arguments given for the expected fit function')
         self.__modify_parameter_dict(*args)
         result = Fit_3_states_discrete_rate_changes(times, **self.argumentStorageDict) 
-        return np.log(np.array(result[1]) + np.array(result[2]) )
+        return np.log(np.array(result[1]) + self.weightFactor * np.array(result[2]) )
 
 
 
@@ -130,7 +129,7 @@ def Order_fitvalDict(startfitvaldict:dict,boundvaldict:dict, nrWashings:int):
 
 
 
-def Fit_to_function_multiple_washes(timedata,posidata,startfitvaldict:dict,boundvaldict:dict,nrWashings:int):
+def Fit_to_function_multiple_washes(timedata,posidata,startfitvaldict:dict,boundvaldict:dict,nrWashings:int, weightFactor=1, iterations=1000):
     '''Fit to single data posidata.
         Takes dictionaries for startfitvaldict and boundvaldict, 
         startfitvaldict takes a dict that contains all parameters in the form 
@@ -146,12 +145,12 @@ def Fit_to_function_multiple_washes(timedata,posidata,startfitvaldict:dict,bound
         
     #Fit_3_states_discrete_rate_changes(t_vals:List[float], A1_start:float, A2_start:float,A3_start:float, k12:List,k13:List,k23:List,k21:List,k31:List,k32:List,t_0:List)
     d1,d2 = Order_fitvalDict(startfitvaldict,boundvaldict,nrWashings)
-    usedFitFunction = Storage_of_fit_choice(d1)
+    usedFitFunction = Storage_of_fit_choice(d1,weightFactor)
     startfitVals = usedFitFunction.current_variable_params_as_list()
     boundsOfFit = usedFitFunction.generate_boundaries_for_fit(boundvaldict)
     # print(startfitVals)
     # print(boundsOfFit)
-    popt, pcov = curve_fit(lambda x, *args: usedFitFunction.call_fit_log_function(x,*args), timedata, np.log(posidata),p0=startfitVals,bounds=boundsOfFit)
+    popt, pcov = curve_fit(lambda x, *args: usedFitFunction.call_fit_log_function(x,*args), timedata, np.log(posidata),p0=startfitVals,bounds=boundsOfFit,maxfev=iterations)
 
     # legendTxt = ''
     # for x in tuple(popt):
