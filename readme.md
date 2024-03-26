@@ -17,7 +17,7 @@ The 'Fit_program_collective_fit.ipynb' corresponds to the program and is heavily
 
 
 # Needed dependencies:
-scipy
-matplotlib
-openpyxl
-lmfit
+* scipy
+* matplotlib
+* openpyxl
+* lmfit
