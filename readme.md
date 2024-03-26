@@ -16,7 +16,7 @@ It fits the data using two approaches:
 The 'Fit_program_collective_fit.ipynb' corresponds to the program and is heavily commented to explain how to use the data of an xlsx file.
 
 
-needed dependencies:
+# Needed dependencies:
 scipy
 matplotlib
 openpyxl
