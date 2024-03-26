@@ -88,10 +88,14 @@ def Fit_3_states_fix_rates_function(t_vals:List[float], C1_start, C2_start, C3_s
     M_matrix = rate_matrix_creator_3_states(k12=k12,k21=k21,k13=k13,k31=k31, k23=k23, k32=k32)
     if isinstance(C1_start, list) and isinstance(C2_start, list) and isinstance(C3_start, list):
         A_vec = np.array([C1_start[0],C2_start[0],C3_start[0]],dtype=np.float64)
-    elif isinstance(C1_start, float) and isinstance(C2_start, float) and isinstance(C3_start, float):
+    elif isinstance(C1_start,(int,float)) and isinstance(C2_start,(int,float)) and isinstance(C3_start,(int,float)):
         A_vec = np.array([C1_start,C2_start,C3_start],dtype=np.float64)
-    else: 
-       raise TypeError('Inconsistent definition of the concentration start values')
+
+    else:
+        try:
+            A_vec = np.array([C1_start.value,C2_start.value,C3_start.value],dtype=np.float64)
+        except:
+           raise TypeError('Inconsistent definition of the concentration start values')
 
     return First_order_rate_eq_solution(t_vals, t_0, M_matrix, A_vec)
 

@@ -2,6 +2,16 @@ from python_scripts.Rate_equation_solution import *
 from scipy.optimize import curve_fit
 import warnings
 
+
+
+
+
+
+
+
+
+
+
 class Storage_of_fit_choice:
     '''This class generates a way to call the fit function with the chosen fit parameters
     for that, it tries to translate in the init phase the startfitdict with its true/false elements into a consistent function call that can be called by curve fit

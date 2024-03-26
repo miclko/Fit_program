@@ -11,7 +11,7 @@ def Get_workbook_from_xlsx_file(filename, be_silent = False):
         print("open xlsx file " + filename)
         print("sheetnames:")
         print(sheetnames )
-        print("returns wb. sheets can be accessed with wb[wb.sheetnames[i]], i in range(len(sheenames))")
+        print("returns wb. sheets can be accessed with wb[wb.sheetnames[i]], i in range(len(wb.sheetnames))")
     return workbook
 
 def Get_data_from_sheet(sheet):
