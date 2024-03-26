@@ -1,6 +1,6 @@
 # Fit function for spr data with variable supplied motor concentrations
 
-This project attempts to fit data created by an SPR experiment using the lmfit library and trying to find the origind of the brick state.
+This project attempts to fit data created by an SPR experiment that has a brick state occuring, using the lmfit library and trying to find the origin of the brick state.
 
 The base assumption is the existence of two washing stages, the first one, where motors and ligands are supplied and the reponse increases and the second stage where the motor concentration is removed but any ligands are still supplied. 
 
